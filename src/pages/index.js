@@ -7,13 +7,24 @@ const cardAddPopup = document.querySelector('.profile__add-button');
 const profileEditPopup = document.querySelector('.profile__edit-button');
 const imagePopup = document.querySelector('.popup_type_image');
 
+const handleCardImageClick = ({ name, link }) => {
+    const img = imagePopup.querySelector('.popup__image');
+    const caption = imagePopup.querySelector('.popup__caption');
+
+    img.src = link;
+    img.alt = name;
+    caption.textContent = name;
+
+    openModal(imagePopup);
+};
+
 initialCards.forEach((item) => {
-    const card = createCard(item, removeCard);
+    const card = createCard(item, removeCard, handleCardImageClick);
 
     renderCard(card);
 });
 
-cardAddPopup.addEventListener('click', (e) => {
+cardAddPopup.addEventListener('click', () => {
     const popup = document.querySelector('.popup_type_new-card');
 
     openModal(popup);
