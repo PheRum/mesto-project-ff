@@ -1,10 +1,7 @@
-import '@/assets/css/app.css';
-import { initialCards } from '@/scripts/cards';
-
 const cardTemplate = document.querySelector('#card-template').content;
 const cardList = document.querySelector('.places__list');
 
-function createCard (data, removeCard) {
+function createCard(data, removeCard) {
     const card = cardTemplate.querySelector('.card').cloneNode(true);
 
     card.querySelector('.card__image').src = data.link;
@@ -15,18 +12,14 @@ function createCard (data, removeCard) {
     return card;
 }
 
-function removeCard (e) {
+function removeCard(e) {
     const cardContainer = e.target.closest('li');
 
     cardContainer.remove();
 }
 
-function renderCard (card) {
+function renderCard(card) {
     cardList.append(card);
 }
 
-initialCards.forEach((item) => {
-    const card = createCard(item, removeCard);
-
-    renderCard(card);
-});
+export { createCard, removeCard, renderCard };
