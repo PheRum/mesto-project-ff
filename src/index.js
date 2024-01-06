@@ -1,10 +1,32 @@
-import './assets/css/app.css';
+import '@/assets/css/app.css';
+import { initialCards } from '@/scripts/cards';
 
-console.log('Hello, World!')
+const cardTemplate = document.querySelector('#card-template').content;
+const cardList = document.querySelector('.places__list');
 
-const numbers = [2, 3, 5];
+function createCard (data, removeCard) {
+    const card = cardTemplate.querySelector('.card').cloneNode(true);
 
-// Стрелочная функция. Не запнётся ли на ней Internet Explorer?
-const doubledNumbers = numbers.map(number => number * 2);
+    card.querySelector('.card__image').src = data.link;
+    card.querySelector('.card__title').textContent = data.name;
 
-console.log(doubledNumbers); // 4, 6, 10
+    card.querySelector('.card__delete-button').addEventListener('click', removeCard);
+
+    return card;
+}
+
+function removeCard (e) {
+    const cardContainer = e.target.closest('li');
+
+    cardContainer.remove();
+}
+
+function renderCard (card) {
+    cardList.append(card);
+}
+
+initialCards.forEach((item) => {
+    const card = createCard(item, removeCard);
+
+    renderCard(card);
+});

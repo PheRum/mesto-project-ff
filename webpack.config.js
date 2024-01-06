@@ -18,6 +18,11 @@ module.exports = {
         port: 3000,
         open: true,
     },
+    resolve: {
+        alias: {
+            '@': resolve(__dirname, 'src'),
+        },
+    },
     module: {
         rules: [
             {
