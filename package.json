@@ -1,10 +1,5 @@
 {
-    "name": "mesto-project-ff",
-    "version": "1.0.0",
-    "description": "Yandex Practice",
-    "repository": "https://github.com:PheRum/mesto-project-ff",
-    "author": "Valery Malyshev <pherum@mail.ru>",
-    "license": "MIT",
+    "private": true,
     "main": "src/pages/index.js",
     "scripts": {
         "dev": "webpack serve",

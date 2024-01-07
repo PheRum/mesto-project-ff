@@ -7,9 +7,9 @@
 
 .card {
     font-family: "Inter", Arial, sans-serif;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
     position: relative;
     overflow: hidden;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 }

@@ -3,7 +3,7 @@ import { checkImageLink } from '@/components/util';
 const cardTemplate = document.querySelector('#card-template').content;
 const placeContainer = document.querySelector('.places__list');
 
-async function createCard(data, removeCard, likeCard, handleCardImageClick) {
+export async function createCard(data, removeCard, likeCard, handleCardImageClick) {
     const card = cardTemplate.querySelector('.card').cloneNode(true);
     const link = await checkImageLink(data.link);
 
@@ -24,19 +24,19 @@ async function createCard(data, removeCard, likeCard, handleCardImageClick) {
     return card;
 }
 
-function likeCard(e) {
+export function likeCard(e) {
     const btn = e.target;
 
     btn.classList.toggle('card__like-button_is-active');
 }
 
-function removeCard(e) {
+export function removeCard(e) {
     const cardContainer = e.target.closest('li');
 
     cardContainer.remove();
 }
 
-function renderCard(card, type = 'append') {
+export function renderCard(card, type = 'append') {
     switch (type) {
         case 'append':
             placeContainer.append(card);
@@ -48,10 +48,3 @@ function renderCard(card, type = 'append') {
             break;
     }
 }
-
-export {
-    createCard,
-    removeCard,
-    likeCard,
-    renderCard,
-};

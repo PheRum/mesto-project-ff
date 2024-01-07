@@ -50,7 +50,7 @@ async function handleFormCardAddSubmit(e) {
     const name = e.target['place-name'].value;
     const link = await checkImageLink(e.target.link.value);
 
-    const card = await createCard({name, link}, removeCard, likeCard, handleCardImageClick);
+    const card = await createCard({ name, link }, removeCard, likeCard, handleCardImageClick);
     renderCard(card, 'prepend');
 
     closeModal(e.target.closest('.popup'));

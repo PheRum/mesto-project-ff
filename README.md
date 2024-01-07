@@ -1,4 +1,4 @@
-# Проектная работа Mesto
+# Проектная работа Место
 
 https://github.com/PheRum/mesto-project-ff
 

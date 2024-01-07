@@ -1,10 +1,10 @@
-function openModal(popup) {
+export function openModal(popup) {
     popup.classList.add('popup_is-opened');
     document.addEventListener('keydown', closePressEscapeModal);
     popup.addEventListener('mousedown', closeOnOverlayModal);
 }
 
-function closeModal(popup) {
+export function closeModal(popup) {
     popup.classList.remove('popup_is-opened');
     document.removeEventListener('keydown', closePressEscapeModal);
     popup.removeEventListener('mousedown', closeOnOverlayModal);
@@ -21,5 +21,3 @@ function closePressEscapeModal(e) {
         closeModal(document.querySelector('.popup_is-opened'));
     }
 }
-
-export { openModal, closeModal };
