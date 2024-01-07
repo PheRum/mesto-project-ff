@@ -1,17 +1,20 @@
+import { checkImageLink } from '@/scripts/util';
+
 const cardTemplate = document.querySelector('#card-template').content;
-const cardList = document.querySelector('.places__list');
+const placeContainer = document.querySelector('.places__list');
 
-function createCard(data, removeCard, handleCardImageClick) {
+async function createCard(data, removeCard, handleCardImageClick) {
     const card = cardTemplate.querySelector('.card').cloneNode(true);
+    const link = await checkImageLink(data.link);
 
-    card.querySelector('.card__image').src = data.link;
+    card.querySelector('.card__image').src = link;
     card.querySelector('.card__image').alt = data.name;
     card.querySelector('.card__title').textContent = data.name;
 
     card.querySelector('.card__image').addEventListener('click', () => {
         handleCardImageClick({
             name: data.name,
-            link: data.link,
+            link: link,
         });
     });
 
@@ -26,8 +29,21 @@ function removeCard(e) {
     cardContainer.remove();
 }
 
-function renderCard(card) {
-    cardList.append(card);
+function renderCard(card, type = 'append') {
+    switch (type) {
+        case 'append':
+            placeContainer.append(card);
+            break;
+
+        case 'prepend':
+        default:
+            placeContainer.prepend(card);
+            break;
+    }
 }
 
-export { createCard, removeCard, renderCard };
+export {
+    createCard,
+    removeCard,
+    renderCard,
+};
