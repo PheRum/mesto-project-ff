@@ -11,7 +11,8 @@
         "build": "webpack --mode production"
     },
     "dependencies": {
-        "core-js": "^3.35.0"
+        "core-js": "^3.35.0",
+        "normalize.css": "^8.0.1"
     },
     "devDependencies": {
         "@babel/core": "^7.23.7",

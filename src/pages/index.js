@@ -1,8 +1,8 @@
-import '@/pages/index.css';
-import { initialCards } from '@/scripts/cards';
-import { createCard, removeCard, renderCard } from '@/scripts/card';
-import { closeModal, openModal } from '@/scripts/modal';
-import { checkImageLink } from '@/scripts/util';
+import '@/assets/app.css';
+import { initialCards } from '@/components/cards';
+import { createCard, likeCard, removeCard, renderCard } from '@/components/card';
+import { closeModal, openModal } from '@/components/modal';
+import { checkImageLink } from '@/components/util';
 
 const cardForm = document.forms['new-place'];
 const cardAddBtn = document.querySelector('.profile__add-button');
@@ -16,7 +16,7 @@ const profileEditBtn = document.querySelector('.profile__edit-button');
 const imagePopup = document.querySelector('.popup_type_image');
 
 initialCards.forEach(async (item) => {
-    const card = await createCard(item, removeCard, handleCardImageClick);
+    const card = await createCard(item, removeCard, likeCard, handleCardImageClick);
 
     renderCard(card);
 });
@@ -50,7 +50,7 @@ async function handleFormCardAddSubmit(e) {
     const name = e.target['place-name'].value;
     const link = await checkImageLink(e.target.link.value);
 
-    const card = await createCard({name, link}, removeCard, handleCardImageClick);
+    const card = await createCard({name, link}, removeCard, likeCard, handleCardImageClick);
     renderCard(card, 'prepend');
 
     closeModal(e.target.closest('.popup'));
