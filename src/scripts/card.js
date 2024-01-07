@@ -42,8 +42,4 @@ function renderCard(card, type = 'append') {
     }
 }
 
-export {
-    createCard,
-    removeCard,
-    renderCard,
-};
+export { createCard, removeCard, renderCard };
