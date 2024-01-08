@@ -1,7 +1,6 @@
 import { checkImageLink } from '@/components/util';
 
 const cardTemplate = document.querySelector('#card-template').content;
-const placeContainer = document.querySelector('.places__list');
 
 export async function createCard(data, removeCard, likeCard, handleCardImageClick) {
     const card = cardTemplate.querySelector('.card').cloneNode(true);
@@ -34,17 +33,4 @@ export function removeCard(e) {
     const cardContainer = e.target.closest('li');
 
     cardContainer.remove();
-}
-
-export function renderCard(card, type = 'append') {
-    switch (type) {
-        case 'append':
-            placeContainer.append(card);
-            break;
-
-        case 'prepend':
-        default:
-            placeContainer.prepend(card);
-            break;
-    }
 }
