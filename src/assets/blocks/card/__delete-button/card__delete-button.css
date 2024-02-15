@@ -2,7 +2,7 @@
     position: absolute;
     top: 18px;
     right: 15px;
-    /*Потом это будет из модификатора*/
+    display: none;
     width: 18px;
     height: 18px;
     margin: 0;

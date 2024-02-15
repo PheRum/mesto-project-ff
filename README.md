@@ -1,6 +1,6 @@
 # Проектная работа Место
 
-https://github.com/PheRum/mesto-project-ff
+https://pherum.github.io/mesto-project-ff
 
 ```bash
 git clone https://github.com/PheRum/mesto-project-ff
