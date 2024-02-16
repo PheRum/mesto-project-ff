@@ -1,5 +1,5 @@
 import '@/assets/app.css';
-import { createCard } from '@/components/card';
+import { createCard, getCardForDeletion } from '@/components/card';
 import { closeModal, openModal, handleModalClick } from '@/components/modal';
 import { checkImageLink } from '@/components/util';
 import { clearValidation, enableValidation } from '@/components/validation';
@@ -46,8 +46,9 @@ const imagePopup = document.querySelector('.popup_type_image');
 const imagePopupImg = imagePopup.querySelector('.popup__image');
 const imagePopupCaption = imagePopup.querySelector('.popup__caption');
 
+const deleteForm = document.forms['delete-card']
 const popupConfirm = document.querySelector('.popup_type_confirm');
-const popupConfirmButton = popupConfirm.querySelector('.popup__button_confirm');
+const popupConfirmCloseDeleteButton = popupConfirm.querySelector('.popup__close');
 
 function setLoading({ buttonElement, isLoading }) {
     buttonElement.textContent = isLoading ? 'Сохранение...' : 'Сохранить';
@@ -72,60 +73,6 @@ function renderCard(card, type = 'append') {
     }
 }
 
-function handleCardLike(cardId, el, counterEl) {
-    el.disabled = true;
-
-    if (el.classList.contains('card__like-button_is-active')) {
-        MestoAPI.unLikeCard(cardId).then(({ data }) => {
-            const likes = data['likes'];
-
-            el.classList.remove('card__like-button_is-active');
-
-            if (likes.length) {
-                counterEl.classList.add('card__like-counter_is-active');
-            } else {
-                counterEl.classList.remove('card__like-counter_is-active');
-            }
-
-            counterEl.textContent = likes.length;
-        }).catch((e) => {
-            console.error(e.message);
-        }).finally(() => {
-            el.disabled = false;
-        });
-    } else {
-        MestoAPI.likeCard(cardId).then(({ data }) => {
-            const likes = data['likes'];
-
-            el.classList.add('card__like-button_is-active');
-
-            counterEl.classList.add('card__like-counter_is-active');
-            counterEl.textContent = likes.length;
-        }).catch((e) => {
-            console.error(e.message);
-        }).finally(() => {
-            el.disabled = false;
-        });
-    }
-}
-
-function handleCardDelete(id, el) {
-    openModal(popupConfirm);
-
-    popupConfirmButton.onclick = () => {
-        el.disabled = true;
-
-        MestoAPI.deleteCard(id).then(() => {
-            el.closest('li').remove();
-            closeModal(popupConfirm);
-        }).catch(e => {
-            console.error(e.message);
-        }).finally(() => {
-            el.disabled = false;
-        });
-    };
-}
-
 function handleCardImageClick({ name, link }) {
     imagePopupImg.src = link;
     imagePopupImg.alt = name;
@@ -147,9 +94,7 @@ function handleFormProfileEditSubmit(e) {
         isLoading: true,
     });
 
-    MestoAPI.updateProfile(data).then(response => {
-        const { name, about, avatar } = response.data;
-
+    MestoAPI.updateProfile(data).then(({ name, about, avatar }) => {
         setProfile({ name, about, avatar });
         closeModal(profilePopup);
     }).catch(e => {
@@ -175,11 +120,11 @@ async function handleFormCardAddSubmit(e) {
         isLoading: true,
     });
 
-    MestoAPI.storeCard(data).then(async ({ data }) => {
+    MestoAPI.storeCard(data).then(async (data) => {
         const card = await createCard({
             ...data,
             owner_id: data.owner['_id'],
-        }, handleCardDelete, handleCardLike, handleCardImageClick);
+        }, openDeletePopup, handleCardImageClick);
 
         renderCard(card, 'prepend');
         closeModal(cardPopup);
@@ -202,9 +147,7 @@ function handleProfileAvatarFormSubmit(e) {
         isLoading: true,
     });
 
-    MestoAPI.updateProfileAvatar(profileImageInput.value).then((response) => {
-        const { name, about, avatar } = response.data;
-
+    MestoAPI.updateProfileAvatar(profileImageInput.value).then(({ name, about, avatar }) => {
         setProfile({
             name,
             about,
@@ -241,24 +184,47 @@ function handleProfileImageClick() {
     openModal(profileAvatarPopup);
 }
 
+function openDeletePopup() {
+    openModal(popupConfirm);
+}
+
+function closeDeletePopup() {
+    closeModal(popupConfirm);
+}
+
+function deleteCard({ cardId, deleteButton }) {
+    MestoAPI.deleteCard(cardId).then(() => {
+        deleteButton.closest('.places__item').remove();
+        closeDeletePopup();
+    }).catch(e => {
+        console.error(e.message);
+    });
+}
+
+function handleDeleteForm(evt) {
+    evt.preventDefault();
+    deleteCard(getCardForDeletion());
+}
+
 cardAddBtn.addEventListener('click', handleCardPopupButtonOpen);
 profileEditBtn.addEventListener('click', handlePopupProfileButtonOpenClick);
 profileImage.addEventListener('click', handleProfileImageClick);
 cardForm.addEventListener('submit', handleFormCardAddSubmit);
 profileForm.addEventListener('submit', handleFormProfileEditSubmit);
 profileAvatarForm.addEventListener('submit', handleProfileAvatarFormSubmit);
+deleteForm.addEventListener('submit', handleDeleteForm);
 
 cardPopup.addEventListener('click', handleModalClick);
 imagePopup.addEventListener('click', handleModalClick);
 profilePopup.addEventListener('click', handleModalClick);
 popupConfirm.addEventListener('click', handleModalClick);
 profileAvatarPopup.addEventListener('click', handleModalClick);
+popupConfirmCloseDeleteButton.addEventListener('click', closeDeletePopup);
 
 enableValidation(validationConfig);
 
 Promise.all([MestoAPI.fetchProfile(), MestoAPI.fetchCards()]).then(([user, cards]) => {
-    const { name, about, avatar, _id } = user.data;
-    const cardList = cards.data;
+    const { name, about, avatar, _id } = user;
 
     setProfile({
         name,
@@ -266,11 +232,11 @@ Promise.all([MestoAPI.fetchProfile(), MestoAPI.fetchCards()]).then(([user, cards
         avatar,
     });
 
-    cardList.forEach(async (data) => {
+    cards.forEach(async (data) => {
         const card = await createCard({
             ...data,
             owner_id: _id,
-        }, handleCardDelete, handleCardLike, handleCardImageClick);
+        }, openDeletePopup, handleCardImageClick);
 
         renderCard(card);
     });

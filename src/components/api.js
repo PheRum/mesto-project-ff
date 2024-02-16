@@ -1,51 +1,58 @@
-import axios from 'axios';
+const baseURL = 'https://nomoreparties.co/v1/wff-cohort-6';
+const headers = {
+    'Authorization': '97ab1537-eb90-44cf-8971-1aba9792c57d',
+    'Content-Type': 'application/json',
+};
 
-const $axios = axios.create({
-    baseURL: 'https://nomoreparties.co/v1/wff-cohort-6',
-    headers: {
-        'Authorization': '97ab1537-eb90-44cf-8971-1aba9792c57d',
-        'Content-Type': 'application/json',
-    },
-});
+const $fetch = (method, uri, body = {}) => {
+    const options = {
+        method,
+        headers,
+    };
 
-$axios.interceptors.response.use(response => response, error => {
-    if (error?.response?.data?.message) {
-        error.message = error?.response?.data?.message;
+    if (Object.keys(body).length) {
+        options['body'] = JSON.stringify(body);
     }
 
-    return Promise.reject(error);
-});
+    return fetch(`${baseURL}/${uri}`, options).then((response) => {
+        if (response.ok) {
+            return response.json();
+        }
+
+        return Promise.reject(response.status);
+    });
+};
 
 export const MestoAPI = {
     fetchCards() {
-        return $axios.get('/cards');
+        return $fetch('GET', '/cards');
     },
 
     storeCard({ name, link }) {
-        return $axios.post('/cards', { name, link });
+        return $fetch('POST', '/cards', { name, link });
     },
 
     deleteCard(id) {
-        return $axios.delete(`/cards/${id}`);
+        return $fetch('DELETE', `/cards/${id}`);
     },
 
     likeCard(id) {
-        return $axios.put(`/cards/likes/${id}`);
+        return $fetch('PUT', `/cards/likes/${id}`);
     },
 
     unLikeCard(id) {
-        return $axios.delete(`/cards/likes/${id}`);
+        return $fetch('DELETE', `/cards/likes/${id}`);
     },
 
     fetchProfile() {
-        return $axios.get('/users/me');
+        return $fetch('GET', '/users/me');
     },
 
     updateProfile({ name, about }) {
-        return $axios.patch('/users/me', { name, about });
+        return $fetch('PATCH', '/users/me', { name, about });
     },
 
     updateProfileAvatar(url) {
-        return $axios.patch('/users/me/avatar', { avatar: url });
+        return $fetch('PATCH', '/users/me/avatar', { avatar: url });
     },
 };
