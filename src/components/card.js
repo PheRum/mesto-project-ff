@@ -5,12 +5,14 @@ const cardTemplate = document.querySelector('#card-template').content;
 export async function createCard(data, removeCard, likeCard, handleCardImageClick) {
     const card = cardTemplate.querySelector('.card').cloneNode(true);
     const link = await checkImageLink(data.link);
+    const cardImage = card.querySelector('.card__image');
 
-    card.querySelector('.card__image').src = link;
-    card.querySelector('.card__image').alt = data.name;
+    cardImage.src = data.link;
+    cardImage.alt = data.name;
+
     card.querySelector('.card__title').textContent = data.name;
 
-    card.querySelector('.card__image').addEventListener('click', () => {
+    cardImage.addEventListener('click', () => {
         handleCardImageClick({
             name: data.name,
             link: link,
