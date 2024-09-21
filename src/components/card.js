@@ -13,11 +13,13 @@ export async function createCard(data, openDeletePopup, handleCardImageClick) {
     const likeButton = card.querySelector('.card__like-button');
     const likeCounter = card.querySelector('.card__like-counter');
 
-    card.querySelector('.card__image').src = link;
-    card.querySelector('.card__image').alt = data.name;
+    const cardImage = card.querySelector('.card__image');
+
+    cardImage.src = link;
+    cardImage.alt = data.name;
     card.querySelector('.card__title').textContent = data.name;
 
-    card.querySelector('.card__image').addEventListener('click', () => {
+    cardImage.addEventListener('click', () => {
         handleCardImageClick({
             name: data.name,
             link: link,
