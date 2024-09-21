@@ -14,7 +14,7 @@ const $fetch = (method, uri, body = {}) => {
         options['body'] = JSON.stringify(body);
     }
 
-    return fetch(`${baseURL}/${uri}`, options).then((response) => {
+    return fetch(`${baseURL}${uri}`, options).then((response) => {
         if (response.ok) {
             return response.json();
         }
